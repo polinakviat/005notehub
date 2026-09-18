@@ -1,0 +1,22 @@
+{
+  "name": "05notehub",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/react-paginate": "^7.1.4",
+    "@types/yup": "^0.29.14",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  },
+  "dependencies": {
+    "formik": "^2.4.9",
+    "react-paginate": "^8.3.0",
+    "yup": "^1.7.1"
+  }
+}
