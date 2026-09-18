@@ -1,17 +1,16 @@
+export type NoteTag = 'Todo' | 'Personal' | 'Shopping' | 'Meeting' | 'Work';
+
 export interface Note {
-    id: string;
-    title: string
-    content: string;
-    tag?: string;
+  id: string;
+  title: string;
+  content: string;
+  tag: NoteTag;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface NewNote {
-    title: string;
-    content: string;
-    tag?: string;
-}
-
-export interface FetchNotesResponse {
-    notes: Note[];
-    totalPages: number;
+  title: string;
+  content: string;
+  tag: NoteTag;
 }

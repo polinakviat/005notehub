@@ -8,35 +8,28 @@ interface ModalProps {
   children: ReactNode;
 }
 
-export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
-  // Закриття по клавіші Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
 
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Блокуємо прокручування при відкритті
+    document.body.style.overflow = 'hidden';
+
+    // Очисна функція: відновлюємо прокручування при закритті або розмонтуванні
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   return createPortal(
-    <div
-      className={css.backdrop}
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose} // Закриття при кліку на бекдроп
-    >
-      <div 
-        className={css.modal} 
-        onClick={(e) => e.stopPropagation()} // Щоб клік всередині модалки не закривав її
-      >
+    <div className={css.backdrop} onClick={onClose}>
+      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>,
     document.body
   );
-}; 
+};

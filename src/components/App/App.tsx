@@ -35,7 +35,7 @@ export const NoteItem = ({ note }: { note: Note }) => {
 
 export default function App() {
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>(''); // Стан для виконання query
   const [inputValue, setInputValue] = useState<string>(''); // Стан для контрольованого input
@@ -52,19 +52,19 @@ export default function App() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['notes', page, searchQuery],
-    queryFn: () => fetchNotes(page, perPage, ''),
+    queryFn: () => fetchNotes(page, perPage, searchQuery),
   });
 
-  const notes = data?.notes || [];
-  const totalPages = data?.totalPages || 0;
+  const notes: Note[] = data?.notes || [];
+  const totalPages: number = data?.totalPages || 0;
 
 
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-			  <h1>NoteHub</h1>
-			  <SearchBox value={inputValue} onChange={handleSearchChange} />
+        <h1>NoteHub</h1>
+        <SearchBox value={inputValue} onChange={handleSearchChange} />
         <button className={css.button} onClick={() => setIsModalOpen(true)}>
           Create note +
         </button>
@@ -78,13 +78,24 @@ export default function App() {
         {isLoading && <p>Loading notes...</p>}
         {isError && <p>Failed to load notes.</p>}
 
-        {!isLoading && !isError && <NoteList notes={notes} />}
+        {/* Рендеримо NoteList лише коли немає помилки/завантаження ТА є хоча б одна нотатка */}
+        {!isLoading && !isError && notes.length > 0 && (
+          <NoteList notes={notes} />
+        )}
 
-        <Pagination
-          pageCount={totalPages}
-          currentPage={page}
-          onPageChange={(newPage) => setPage(newPage)}
-        />
+        {/* Якщо після завантаження нотаток немає — показуємо повідомлення */}
+        {!isLoading && !isError && notes.length === 0 && (
+          <p>No notes found.</p>
+        )}
+
+        {/* Рендеримо Pagination тільки якщо сторінок більше ніж 1 */}
+        {!isLoading && !isError && totalPages > 1 && (
+          <Pagination
+            pageCount={totalPages}
+            currentPage={page}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
+        )}
       </main>
     </div>
   );
