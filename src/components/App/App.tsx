@@ -11,7 +11,6 @@ import { useDebouncedCallback } from 'use-debounce';
 import { SearchBox } from '../SearchBox/SearchBox';
 import css from './App.module.css';
 
-
 export const NoteItem = ({ note }: { note: Note }) => {
 	const queryClient = useQueryClient();
 	const deleteMutation = useMutation({
