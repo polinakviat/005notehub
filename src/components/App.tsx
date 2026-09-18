@@ -10,7 +10,7 @@ import { Modal } from '../components/Modal';
 import { NoteForm } from './NoteForm';
 import { useDebouncedCallback } from 'use-debounce';
 import { SearchBox } from './SearchBox';
-import css from './App.module.css';
+import css from '../components/App.module.css';
 
 
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
@@ -81,7 +81,7 @@ const handleCreateNote = () => {
   mutation.mutate({
     title: "Нова нотатка",
     content: "Текст нової нотатки...",
-    tag: "Work", // якщо є теги за ТЗ
+    tag: "Work",
   });
 };
 
@@ -96,7 +96,6 @@ const handleCreateNote = () => {
         </button>
       </header>
 
-      {/* Модалка з формою */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <NoteForm onClose={() => setIsModalOpen(false)} />
       </Modal>
