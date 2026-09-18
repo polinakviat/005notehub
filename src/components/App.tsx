@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { deleteNote } from '../components/services/noteService';
-import type { Note } from '../components/types/note';
-import { NoteList } from '../components/NoteList';
-import { Pagination } from '../components/Pagination';
+import { deleteNote } from '../services/noteService';
+import type { Note } from '../types/note';
+import { NoteList } from './NoteList';
+import { Pagination } from './Pagination';
 import { useState } from 'react';
-import { fetchNotes } from '../components/services/noteService';
-import { Modal } from '../components/Modal';
+import { fetchNotes } from '../services/noteService';
+import { Modal } from './Modal';
 import { NoteForm } from './NoteForm';
 import { useDebouncedCallback } from 'use-debounce';
 import { SearchBox } from './SearchBox';
-import css from '../components/App.module.css';
+import css from './App.module.css';
 
 
 export const NoteItem = ({ note }: { note: Note }) => {
