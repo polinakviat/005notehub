@@ -1,26 +1,15 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { deleteNote } from '../components/services/noteService';
 import type { Note } from '../components/types/note';
 import { NoteList } from '../components/NoteList';
 import { Pagination } from '../components/Pagination';
 import { useState } from 'react';
-import { fetchNotes, createNote } from '../components/services/noteService';
+import { fetchNotes } from '../components/services/noteService';
 import { Modal } from '../components/Modal';
 import { NoteForm } from './NoteForm';
 import { useDebouncedCallback } from 'use-debounce';
 import { SearchBox } from './SearchBox';
 import css from '../components/App.module.css';
-
-
-const token = import.meta.env.VITE_NOTEHUB_TOKEN;
-
-const api = axios.create({
-	baseURL: 'https://notehub-public.goit.study/api/auth',
-	headers: {
-		Authorization: `Bearer ${token}`
-  }
-});
 
 export const NoteItem = ({ note }: { note: Note }) => {
 	const queryClient = useQueryClient();
@@ -45,45 +34,29 @@ export const NoteItem = ({ note }: { note: Note }) => {
 
 export default function App() {
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>(''); // Стан для виконання query
   const [inputValue, setInputValue] = useState<string>(''); // Стан для контрольованого input
-	const perPage = 12;
+  const perPage = 12;
 	
-	const debouncedSearch = useDebouncedCallback((value: string) => {
+  const debouncedSearch = useDebouncedCallback((value: string) => {
     setSearchQuery(value);
     setPage(1);
-	}, 300)
-	const handleSearchChange = (value: string) => {
+  }, 300)
+  const handleSearchChange = (value: string) => {
     setInputValue(value);
     debouncedSearch(value);
   };
 
-	const queryClient = useQueryClient();
-
-	const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', page],
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['notes', page, searchQuery],
     queryFn: () => fetchNotes(page, perPage, ''),
   });
 
   const notes = data?.notes || [];
   const totalPages = data?.totalPages || 0;
 
-	
-	  const mutation = useMutation({
-    mutationFn: createNote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notes'] });
-    },
-	  });
-const handleCreateNote = () => {
-  mutation.mutate({
-    title: "Нова нотатка",
-    content: "Текст нової нотатки...",
-    tag: "Work",
-  });
-};
 
 
   return (
