@@ -1,20 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchNotes } from '../components/services/noteService';
+import type { Note } from '../../types/note';
 import css from './NoteList.module.css';
 
-export const NoteList = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes'],
-    queryFn: () => fetchNotes(1, 12),
-  });
+interface NoteListProps {
+  notes: Note[];
+}
 
-  if (isLoading) return <p>Loading notes...</p>;
-  if (isError) return <p>Failed to load notes.</p>;
-
-  const notes = data?.notes || [];
-
+export const NoteList = ({ notes }: NoteListProps) => {
   if (notes.length === 0) {
-    return null;
+    return <p>No notes found.</p>;
   }
 
   return (

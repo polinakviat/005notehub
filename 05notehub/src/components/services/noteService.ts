@@ -4,13 +4,13 @@ import type { FetchNotesResponse, Note, NewNote } from '../types/note';
 export const fetchNotes = async (
     page: number = 1,
     perPage: number = 12,
-    searchQuery: string = ''
+    search: string = ''
 ): Promise<FetchNotesResponse> => {
     const response = await axios.get<FetchNotesResponse>('/notes', {
         params: {
             page,
             perPage,
-            query: searchQuery,
+            search,
         },
     });
     return response.data;

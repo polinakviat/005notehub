@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import css from './App.module.css';
 import { deleteNote } from '../components/services/noteService';
 import type { Note } from '../components/types/note';
 import { NoteList } from '../components/NoteList';
@@ -9,6 +8,9 @@ import { useState } from 'react';
 import { fetchNotes, createNote } from '../components/services/noteService';
 import { Modal } from '../components/Modal';
 import { NoteForm } from './NoteForm';
+import { useDebouncedCallback } from 'use-debounce';
+import { SearchBox } from './SearchBox';
+import css from './App.module.css';
 
 
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
@@ -44,9 +46,19 @@ export const NoteItem = ({ note }: { note: Note }) => {
 export default function App() {
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Стан для виконання query
+  const [inputValue, setInputValue] = useState<string>(''); // Стан для контрольованого input
 	const perPage = 12;
+	
+	const debouncedSearch = useDebouncedCallback((value: string) => {
+    setSearchQuery(value);
+    setPage(1);
+	}, 300)
+	const handleSearchChange = (value: string) => {
+    setInputValue(value);
+    debouncedSearch(value);
+  };
 
 	const queryClient = useQueryClient();
 
@@ -77,7 +89,8 @@ const handleCreateNote = () => {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <h1>NoteHub</h1>
+			  <h1>NoteHub</h1>
+			  <SearchBox value={inputValue} onChange={handleSearchChange} />
         <button className={css.button} onClick={() => setIsModalOpen(true)}>
           Create note +
         </button>

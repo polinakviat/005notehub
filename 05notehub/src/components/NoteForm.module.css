@@ -40,6 +40,7 @@
     transition: background-color 0.2s ease;
 }
 
+
 .submitButton:hover {
     background-color: #0b5ed7;
 }
