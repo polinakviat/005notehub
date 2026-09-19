@@ -27,7 +27,9 @@ export const NoteList = ({ notes }: NoteListProps) => {
         <li key={note.id} className={css.listItem}>
           <h3>{note.title}</h3>
           <p>{note.content}</p>
-
+          
+          <span className={css.tag}>{note.tag}</span>
+          
           <button
             type="button"
             onClick={() => deleteMutation.mutate(note.id)}

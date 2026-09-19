@@ -13,14 +13,19 @@ export const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   useEffect(() => {
     if (!isOpen) return;
 
-    // Блокуємо прокручування при відкритті
     document.body.style.overflow = 'hidden';
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
 
-    // Очисна функція: відновлюємо прокручування при закритті або розмонтуванні
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

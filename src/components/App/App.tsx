@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import { deleteNote } from '../../services/noteService';
 import type { Note } from '../../types/note';
 import { NoteList } from '../NoteList/NoteList';
@@ -33,6 +33,7 @@ export const NoteItem = ({ note }: { note: Note }) => {
 };
 
 export default function App() {
+    
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -49,9 +50,10 @@ export default function App() {
     debouncedSearch(value);
   };
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isPlaceholderData } = useQuery({
     queryKey: ['notes', page, searchQuery],
     queryFn: () => fetchNotes(page, perPage, searchQuery),
+    placeholderData: keepPreviousData,
   });
 
   const notes: Note[] = data?.notes || [];
@@ -79,7 +81,9 @@ export default function App() {
 
         {/* Рендеримо NoteList лише коли немає помилки/завантаження ТА є хоча б одна нотатка */}
         {!isLoading && !isError && notes.length > 0 && (
+          <div style={{ opacity: isPlaceholderData ? 0.6 : 1 }}>
           <NoteList notes={notes} />
+</div>
         )}
 
         {/* Якщо після завантаження нотаток немає — показуємо повідомлення */}
